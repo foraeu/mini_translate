@@ -113,17 +113,41 @@ class TranslationProvider with ChangeNotifier {
 
       _translatedText = result;
 
-      // 保存到历史记录
-      final history = TranslationHistory(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        sourceText: _sourceText,
-        translatedText: result,
-        sourceLang: _sourceLang,
-        targetLang: _targetLang,
-        timestamp: DateTime.now(),
+      // 检查是否已存在相同的翻译记录
+      final existingHistory = _histories.firstWhere(
+        (h) => h.sourceText == _sourceText && 
+               h.sourceLang == _sourceLang && 
+               h.targetLang == _targetLang,
+        orElse: () => TranslationHistory(
+          id: '',
+          sourceText: '',
+          translatedText: '',
+          sourceLang: '',
+          targetLang: '',
+          timestamp: DateTime.now(),
+        ),
       );
+
+      if (existingHistory.id.isNotEmpty) {
+        // 更新已存在的记录,保留收藏和生词本状态
+        final updatedHistory = existingHistory.copyWith(
+          translatedText: result,
+          timestamp: DateTime.now(),
+        );
+        await _storageService.updateHistory(updatedHistory);
+      } else {
+        // 创建新的历史记录
+        final history = TranslationHistory(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          sourceText: _sourceText,
+          translatedText: result,
+          sourceLang: _sourceLang,
+          targetLang: _targetLang,
+          timestamp: DateTime.now(),
+        );
+        await _storageService.saveHistory(history);
+      }
       
-      await _storageService.saveHistory(history);
       await _loadHistories();
       
     } catch (e) {

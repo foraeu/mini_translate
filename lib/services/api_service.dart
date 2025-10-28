@@ -144,19 +144,8 @@ class ApiService {
       );
 
       return response.statusCode == 200;
-    } on DioException catch (e) {
-      // 打印详细错误信息用于调试
-      print('测试连接失败 - 类型: ${e.type.name}');
-      print('错误信息: ${e.message}');
-      print('错误详情: ${e.error}');
-      if (e.response != null) {
-        print('响应状态码: ${e.response?.statusCode}');
-        print('响应数据: ${e.response?.data}');
-      }
-      rethrow;
     } catch (e) {
-      print('未知错误: $e');
-      rethrow;
+      return false;
     }
   }
 
