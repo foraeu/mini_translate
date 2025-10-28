@@ -172,22 +172,25 @@ class SettingsScreen extends StatelessWidget {
     bool isCurrent,
   ) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: isCurrent ? 3 : 1,
+      margin: const EdgeInsets.only(bottom: 8),
+      elevation: isCurrent ? 2 : 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         side: isCurrent
             ? BorderSide(
                 color: Theme.of(context).colorScheme.primary,
                 width: 2,
               )
-            : BorderSide.none,
+            : BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
+                width: 1,
+              ),
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         onTap: () => provider.setCurrentConfig(config),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -197,8 +200,8 @@ class SettingsScreen extends StatelessWidget {
                     child: Text(
                       config.name,
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
                         color: isCurrent
                             ? Theme.of(context).colorScheme.primary
                             : Theme.of(context).colorScheme.onSurface,
@@ -209,43 +212,41 @@ class SettingsScreen extends StatelessWidget {
                     Icon(
                       Icons.check_circle,
                       color: Theme.of(context).colorScheme.primary,
-                      size: 20,
+                      size: 18,
                     ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
                 'Model: ${config.model}',
                 style: TextStyle(
-                  fontSize: 14,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  fontSize: 13,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                config.apiUrl,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                ),
-              ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton.icon(
-                    icon: const Icon(Icons.edit, size: 18),
-                    label: const Text('编辑'),
+                    icon: const Icon(Icons.edit_outlined, size: 16),
+                    label: const Text('编辑', style: TextStyle(fontSize: 13)),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      minimumSize: const Size(0, 32),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
                     onPressed: () => _showConfigDialog(context, config: config),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 4),
                   TextButton.icon(
-                    icon: const Icon(Icons.delete, size: 18),
-                    label: const Text('删除'),
+                    icon: const Icon(Icons.delete_outline, size: 16),
+                    label: const Text('删除', style: TextStyle(fontSize: 13)),
                     style: TextButton.styleFrom(
                       foregroundColor: Theme.of(context).colorScheme.error,
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      minimumSize: const Size(0, 32),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     onPressed: () => _deleteConfig(context, config, provider),
                   ),
