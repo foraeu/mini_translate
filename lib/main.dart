@@ -53,12 +53,6 @@ class MyApp extends StatelessWidget {
                 brightness: Brightness.light,
               ),
               scaffoldBackgroundColor: const Color(0xFFF6F8FB), // 浅灰蓝背景
-              cardTheme: CardThemeData(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
             ),
             
             // 主页面
