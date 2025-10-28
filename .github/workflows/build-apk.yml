@@ -1,0 +1,85 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main, master ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+        
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+        channel: 'stable'
+        cache: true
+        
+    - name: Get dependencies
+      run: flutter pub get
+      
+    - name: Analyze code
+      run: flutter analyze
+      continue-on-error: true
+      
+    - name: Build APK (Split per ABI)
+      run: flutter build apk --release --split-per-abi
+      
+    - name: Get version from pubspec
+      id: version
+      run: |
+        VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Building version: $VERSION"
+        
+    - name: Rename APK files
+      run: |
+        mkdir -p build/release
+        cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk build/release/mini-translate-v${{ steps.version.outputs.version }}-armeabi-v7a.apk
+        cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk build/release/mini-translate-v${{ steps.version.outputs.version }}-arm64-v8a.apk
+        cp build/app/outputs/flutter-apk/app-x86_64-release.apk build/release/mini-translate-v${{ steps.version.outputs.version }}-x86_64.apk
+        
+    - name: Calculate APK sizes
+      run: |
+        echo "### APK Build Information" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Architecture | Size | File |" >> $GITHUB_STEP_SUMMARY
+        echo "|-------------|------|------|" >> $GITHUB_STEP_SUMMARY
+        for apk in build/release/*.apk; do
+          size=$(du -h "$apk" | cut -f1)
+          name=$(basename "$apk")
+          echo "| ${name%%.*} | $size | $name |" >> $GITHUB_STEP_SUMMARY
+        done
+        
+    - name: Upload APK artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: apk-release
+        path: build/release/*.apk
+        retention-days: 30
+        
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build/release/*.apk
+        generate_release_notes: true
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

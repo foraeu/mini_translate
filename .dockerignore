@@ -1,0 +1,31 @@
+# Flutter/Dart 构建产物
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+
+# Android 构建产物
+android/.gradle/
+android/app/build/
+android/.idea/
+android/local.properties
+android/gradle/
+
+# IDE 配置
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Git
+.git/
+.gitignore
+
+# 其他
+*.log
+*.swp
+.DS_Store
