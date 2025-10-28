@@ -77,7 +77,7 @@ class StorageService {
 
       return configs;
     } catch (e) {
-      print('解析配置失败: $e');
+      // 解析失败返回空列表
       return [];
     }
   }
@@ -157,11 +157,11 @@ class StorageService {
     try {
       final List<dynamic> historyList = jsonDecode(historyStr);
       return historyList
-          .where((item) => item is Map<String, dynamic>)
+          .whereType<Map<String, dynamic>>()
           .map((item) => TranslationHistory.fromJson(item))
           .toList();
     } catch (e) {
-      print('解析历史记录失败: $e');
+      // 解析失败返回空列表
       return [];
     }
   }

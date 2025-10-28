@@ -180,7 +180,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         disabledBackgroundColor:
-            Theme.of(context).colorScheme.surfaceVariant,
+            Theme.of(context).colorScheme.surfaceContainerHighest,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),

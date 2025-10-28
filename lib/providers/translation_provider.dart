@@ -152,7 +152,8 @@ class TranslationProvider with ChangeNotifier {
       _vocabularies = _histories.where((h) => h.isVocabulary).toList();
       notifyListeners();
     } catch (e) {
-      print('加载历史记录失败: $e');
+      // 加载失败时保持空列表
+      _errorMessage = '加载历史记录失败';
     }
   }
 
