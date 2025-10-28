@@ -33,20 +33,8 @@ class ConfigProvider with ChangeNotifier {
       _configs = await _storageService.getAllConfigs();
       _currentConfig = await _storageService.getCurrentConfig();
       
-      // 如果没有任何配置，添加默认的实验性配置
-      if (_configs.isEmpty) {
-        final defaultConfig = ApiConfig(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          name: 'Qwen (实验性)',
-          apiUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
-          model: 'qwen-plus',
-          apiKey: 'sk-8e4ba7a45f254730a40df4b2255115e4',
-        );
-        await _storageService.saveConfig(defaultConfig);
-        _configs = [defaultConfig];
-        await setCurrentConfig(defaultConfig);
-      } else if (_currentConfig == null && _configs.isNotEmpty) {
-        // 如果没有当前配置但有配置列表，自动选择第一个
+      // 如果没有当前配置但有配置列表，自动选择第一个
+      if (_currentConfig == null && _configs.isNotEmpty) {
         await setCurrentConfig(_configs.first);
       }
     } catch (e) {

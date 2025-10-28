@@ -93,6 +93,8 @@ class ApiService {
         throw Exception('API返回错误: ${e.response?.statusCode}');
       } else if (e.type == DioExceptionType.cancel) {
         throw Exception('请求已取消');
+      } else if (e.type == DioExceptionType.connectionError) {
+        throw Exception('网络连接失败，请检查网络设置或API地址是否正确');
       } else {
         throw Exception('网络错误: ${e.message}');
       }
