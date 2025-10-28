@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:dio/dio.dart';
 import '../providers/config_provider.dart';
 import '../models/api_config.dart';
 import '../services/api_service.dart';
@@ -476,6 +477,28 @@ class _ConfigDialogState extends State<ConfigDialog> {
               ],
             ),
             backgroundColor: success ? Colors.green : Colors.red,
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      // 捕获并显示详细的Dio错误
+      String errorMsg = '连接失败';
+      if (e.type == DioExceptionType.badResponse) {
+        errorMsg = 'API错误 ${e.response?.statusCode}: ${e.response?.data}';
+      } else if (e.type == DioExceptionType.connectionTimeout) {
+        errorMsg = '连接超时,请检查网络';
+      } else if (e.type == DioExceptionType.connectionError) {
+        errorMsg = '网络连接失败: ${e.error}';
+      } else {
+        errorMsg = '${e.type.name}: ${e.message ?? e.error}';
+      }
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMsg),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
           ),
         );
       }

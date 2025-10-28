@@ -25,3 +25,24 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
+
+# Dio 网络库
+-keep class io.flutter.plugins.** { *; }
+-keep class com.google.android.gms.** { *; }
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-keep class okio.** { *; }
+-keep interface okio.** { *; }
+
+# 保留所有网络相关的类
+-keep class javax.net.ssl.** { *; }
+-keep class org.apache.http.** { *; }
+-dontwarn org.apache.http.**
+-dontwarn android.net.http.**
+
+# DNS 解析相关
+-keep class java.net.** { *; }
+-keep class javax.net.** { *; }
+

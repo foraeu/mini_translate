@@ -40,7 +40,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
+                getDefaultProguardFile("proguard-android.txt"),  // 使用标准版本,不使用 optimize
                 "proguard-rules.pro"
             )
         }

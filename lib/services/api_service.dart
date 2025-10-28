@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 
 /// API调用服务
@@ -52,7 +51,7 @@ class ApiService {
       // 发送请求
       final response = await _dio.post(
         apiUrl,
-        data: jsonEncode(requestBody),
+        data: requestBody,
         options: Options(
           headers: {
             'Authorization': 'Bearer $apiKey',
@@ -85,19 +84,25 @@ class ApiService {
         throw Exception('API请求失败: ${response.statusCode}');
       }
     } on DioException catch (e) {
-      // 处理Dio异常
+      // 处理Dio异常 - 添加详细错误信息
+      String errorMsg = '未知错误';
+      
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
-        throw Exception('请求超时，请检查网络连接');
+        errorMsg = '请求超时(${e.type.name})';
       } else if (e.type == DioExceptionType.badResponse) {
-        throw Exception('API返回错误: ${e.response?.statusCode}');
+        errorMsg = 'API错误 ${e.response?.statusCode}: ${e.response?.data}';
       } else if (e.type == DioExceptionType.cancel) {
-        throw Exception('请求已取消');
+        errorMsg = '请求已取消';
       } else if (e.type == DioExceptionType.connectionError) {
-        throw Exception('网络连接失败，请检查网络设置或API地址是否正确');
+        errorMsg = '连接失败: ${e.error}';
+      } else if (e.type == DioExceptionType.badCertificate) {
+        errorMsg = 'SSL证书验证失败';
       } else {
-        throw Exception('网络错误: ${e.message}');
+        errorMsg = '${e.type.name}: ${e.message ?? e.error}';
       }
+      
+      throw Exception(errorMsg);
     } catch (e) {
       throw Exception('翻译失败: $e');
     }
@@ -130,7 +135,7 @@ class ApiService {
 
       final response = await _dio.post(
         apiUrl,
-        data: jsonEncode(requestBody),
+        data: requestBody,
         options: Options(
           headers: {
             'Authorization': 'Bearer $apiKey',
@@ -139,8 +144,19 @@ class ApiService {
       );
 
       return response.statusCode == 200;
+    } on DioException catch (e) {
+      // 打印详细错误信息用于调试
+      print('测试连接失败 - 类型: ${e.type.name}');
+      print('错误信息: ${e.message}');
+      print('错误详情: ${e.error}');
+      if (e.response != null) {
+        print('响应状态码: ${e.response?.statusCode}');
+        print('响应数据: ${e.response?.data}');
+      }
+      rethrow;
     } catch (e) {
-      return false;
+      print('未知错误: $e');
+      rethrow;
     }
   }
 
