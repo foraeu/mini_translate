@@ -61,7 +61,7 @@ class _HistoryCardState extends State<HistoryCard> {
           borderRadius: BorderRadius.circular(12),
           onTap: widget.onExpandToggle,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -71,7 +71,7 @@ class _HistoryCardState extends State<HistoryCard> {
                     history: widget.history,
                     provider: widget.provider,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                 ],
                 // 源文本 - 生词本中的单词用更大更醒目的样式
                 Text(
@@ -81,13 +81,13 @@ class _HistoryCardState extends State<HistoryCard> {
                   style: TextStyle(
                     fontSize: widget.history.isVocabulary ? 18 : 15,
                     fontWeight: widget.history.isVocabulary ? FontWeight.w600 : FontWeight.w500,
-                    height: 1.4,
+                    height: 1.3,
                     color: widget.history.isVocabulary 
                         ? Theme.of(context).colorScheme.primary
                         : const Color(0xFF111827),
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 // 翻译结果
                 Text(
                   widget.history.translatedText,
@@ -95,15 +95,15 @@ class _HistoryCardState extends State<HistoryCard> {
                   overflow: isExpanded ? null : TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 14,
-                    height: 1.4,
+                    height: 1.3,
                     color: Color(0xFF6B7280),
                   ),
                 ),
                 // 展开时显示语言和时间
                 if (isExpanded) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Divider(height: 1, color: Colors.grey[200]),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Row(
                     children: [
                       Container(
@@ -136,7 +136,6 @@ class _HistoryCardState extends State<HistoryCard> {
                   ),
                 ],
                 // 操作按钮 - 始终显示但更紧凑
-                const SizedBox(height: 2),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
