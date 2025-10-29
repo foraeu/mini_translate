@@ -50,170 +50,189 @@ class HistoryDetailDialog extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 400),
-            padding: const EdgeInsets.all(20),
+            constraints: const BoxConstraints(
+              maxWidth: 400,
+              maxHeight: 600, // 限制最大高度
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 标题栏
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.article_outlined,
-                      color: Color(0xFF3B82F6),
-                      size: 22,
-                    ),
-                    const SizedBox(width: 8),
-                    const Text(
-                      '翻译详情',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF111827),
+                // 标题栏 - 固定在顶部
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.article_outlined,
+                        color: Color(0xFF3B82F6),
+                        size: 22,
                       ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.close, size: 20),
-                      onPressed: () => Navigator.of(context).pop(),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      color: const Color(0xFF9CA3AF),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                // 源文本
-                const Text(
-                  '原文',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF6B7280),
-                  ),
-                ),
-                const SizedBox(height: 6),
-                SelectableText(
-                  history.sourceText,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    height: 1.5,
-                    color: Color(0xFF111827),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Divider(height: 1),
-                const SizedBox(height: 16),
-                // 翻译结果
-                const Text(
-                  '译文',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF6B7280),
-                  ),
-                ),
-                const SizedBox(height: 6),
-                SelectableText(
-                  history.translatedText,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    height: 1.5,
-                    color: Color(0xFF374151),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // 元信息
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEFF6FF),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        '${history.sourceLang} → ${history.targetLang}',
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: Color(0xFF3B82F6),
-                          fontWeight: FontWeight.w500,
+                      const SizedBox(width: 8),
+                      const Text(
+                        '翻译详情',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF111827),
                         ),
                       ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      dateFormat.format(history.timestamp),
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: Color(0xFF9CA3AF),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.close, size: 20),
+                        onPressed: () => Navigator.of(context).pop(),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        color: const Color(0xFF9CA3AF),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 20),
-                // 操作按钮
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // 生词本按钮
-                    TextButton.icon(
-                      icon: Icon(
-                        history.isVocabulary ? Icons.book : Icons.book_outlined,
-                        size: 18,
-                        color: history.isVocabulary
-                            ? const Color(0xFF3B82F6)
-                            : const Color(0xFF6B7280),
-                      ),
-                      label: Text(
-                        history.isVocabulary ? '已加入生词本' : '加入生词本',
-                        style: TextStyle(
-                          fontSize: 13,
+                const Divider(height: 1),
+                // 可滚动内容区域
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 源文本
+                        const Text(
+                          '原文',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF6B7280),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        SelectableText(
+                          history.sourceText,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            height: 1.5,
+                            color: Color(0xFF111827),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        const Divider(height: 1),
+                        const SizedBox(height: 16),
+                        // 翻译结果
+                        const Text(
+                          '译文',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF6B7280),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        SelectableText(
+                          history.translatedText,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            height: 1.5,
+                            color: Color(0xFF374151),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        // 元信息
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEFF6FF),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                '${history.sourceLang} → ${history.targetLang}',
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: Color(0xFF3B82F6),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              dateFormat.format(history.timestamp),
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: Color(0xFF9CA3AF),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // 操作按钮 - 固定在底部
+                const Divider(height: 1),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // 生词本按钮
+                      TextButton.icon(
+                        icon: Icon(
+                          history.isVocabulary ? Icons.book : Icons.book_outlined,
+                          size: 18,
                           color: history.isVocabulary
                               ? const Color(0xFF3B82F6)
                               : const Color(0xFF6B7280),
                         ),
+                        label: Text(
+                          history.isVocabulary ? '已加入生词本' : '加入生词本',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: history.isVocabulary
+                                ? const Color(0xFF3B82F6)
+                                : const Color(0xFF6B7280),
+                          ),
+                        ),
+                        onPressed: () async {
+                          final error = await provider.toggleVocabulary(history);
+                          if (error != null && context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(error),
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
+                          }
+                        },
                       ),
-                      onPressed: () async {
-                        final error = await provider.toggleVocabulary(history);
-                        if (error != null && context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(error),
-                              backgroundColor: Colors.orange,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                    // 收藏按钮
-                    TextButton.icon(
-                      icon: Icon(
-                        history.isFavorite ? Icons.star : Icons.star_border,
-                        size: 18,
-                        color: history.isFavorite
-                            ? Colors.amber
-                            : const Color(0xFF6B7280),
-                      ),
-                      label: Text(
-                        history.isFavorite ? '已收藏' : '收藏',
-                        style: TextStyle(
-                          fontSize: 13,
+                      const SizedBox(width: 8),
+                      // 收藏按钮
+                      TextButton.icon(
+                        icon: Icon(
+                          history.isFavorite ? Icons.star : Icons.star_border,
+                          size: 18,
                           color: history.isFavorite
-                              ? Colors.amber[700]
+                              ? Colors.amber
                               : const Color(0xFF6B7280),
                         ),
+                        label: Text(
+                          history.isFavorite ? '已收藏' : '收藏',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: history.isFavorite
+                                ? Colors.amber[700]
+                                : const Color(0xFF6B7280),
+                          ),
+                        ),
+                        onPressed: () {
+                          provider.toggleFavorite(history);
+                        },
                       ),
-                      onPressed: () {
-                        provider.toggleFavorite(history);
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
