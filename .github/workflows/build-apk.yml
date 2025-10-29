@@ -76,11 +76,25 @@ jobs:
           echo "| ${name%%.*} | $size | $name |" >> $GITHUB_STEP_SUMMARY
         done
         
-    - name: Upload APK artifacts
+    - name: Upload arm64-v8a APK
       uses: actions/upload-artifact@v4
       with:
-        name: apk-release
-        path: build/release/*.apk
+        name: mini-translate-v${{ steps.version.outputs.version }}-arm64-v8a
+        path: build/release/mini-translate-v${{ steps.version.outputs.version }}-arm64-v8a.apk
+        retention-days: 30
+        
+    - name: Upload armeabi-v7a APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: mini-translate-v${{ steps.version.outputs.version }}-armeabi-v7a
+        path: build/release/mini-translate-v${{ steps.version.outputs.version }}-armeabi-v7a.apk
+        retention-days: 30
+        
+    - name: Upload x86_64 APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: mini-translate-v${{ steps.version.outputs.version }}-x86_64
+        path: build/release/mini-translate-v${{ steps.version.outputs.version }}-x86_64.apk
         retention-days: 30
         
     - name: Create Release
