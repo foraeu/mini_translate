@@ -29,6 +29,12 @@ class HistoryCard extends StatefulWidget {
 }
 
 class _HistoryCardState extends State<HistoryCard> {
+  /// 清理文本中的多余空行，将连续的空行合并为单个空行
+  String _cleanText(String text) {
+    // 将连续的多个换行符（包括空格）替换为单个换行符
+    return text.replaceAll(RegExp(r'\n\s*\n+'), '\n');
+  }
+
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
@@ -88,9 +94,9 @@ class _HistoryCardState extends State<HistoryCard> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                // 翻译结果
+                // 翻译结果 - 清理多余空行
                 Text(
-                  widget.history.translatedText,
+                  _cleanText(widget.history.translatedText),
                   maxLines: isExpanded ? null : 2,
                   overflow: isExpanded ? null : TextOverflow.ellipsis,
                   style: const TextStyle(

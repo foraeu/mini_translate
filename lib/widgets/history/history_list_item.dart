@@ -14,6 +14,11 @@ class HistoryListItem extends StatelessWidget {
     required this.onTap,
   });
 
+  /// 清理文本中的多余空行
+  String _cleanText(String text) {
+    return text.replaceAll(RegExp(r'\n\s*\n+'), '\n');
+  }
+
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('MM-dd HH:mm');
@@ -48,7 +53,7 @@ class HistoryListItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    history.translatedText,
+                    _cleanText(history.translatedText),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
