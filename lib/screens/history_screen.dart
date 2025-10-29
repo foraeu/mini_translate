@@ -70,10 +70,10 @@ class _HistoryScreenState extends State<HistoryScreen>
                   return TabBarView(
                     controller: _tabController,
                     children: [
-                      // 全部历史
-                      _buildHistoryList(context, provider.histories, provider),
-                      // 收藏列表
-                      _buildHistoryList(context, provider.favorites, provider),
+                      // 全部历史 - 使用简洁列表
+                      _buildSimpleHistoryList(context, provider.histories, provider),
+                      // 收藏列表 - 使用卡片样式
+                      _buildCardHistoryList(context, provider.favorites, provider),
                       // 生词本（按掌握程度分组）
                       _buildVocabularyGroupedList(context, provider.vocabularies, provider),
                     ],
@@ -87,8 +87,8 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  /// 构建历史记录列表
-  Widget _buildHistoryList(
+  /// 构建简洁列表（用于"全部"标签页）
+  Widget _buildSimpleHistoryList(
     BuildContext context,
     List<TranslationHistory> histories,
     TranslationProvider provider,
@@ -106,6 +106,50 @@ class _HistoryScreenState extends State<HistoryScreen>
             const SizedBox(height: 16),
             Text(
               '暂无记录',
+              style: TextStyle(
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        await provider.refreshHistories();
+      },
+      child: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: histories.length,
+        itemBuilder: (context, index) {
+          final history = histories[index];
+          return _buildSimpleHistoryItem(context, history, provider);
+        },
+      ),
+    );
+  }
+
+  /// 构建卡片列表（用于"收藏"标签页）
+  Widget _buildCardHistoryList(
+    BuildContext context,
+    List<TranslationHistory> histories,
+    TranslationProvider provider,
+  ) {
+    if (histories.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.star_outline,
+              size: 64,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '暂无收藏',
               style: TextStyle(
                 fontSize: 16,
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
@@ -573,7 +617,261 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  /// 构建历史记录卡片
+  /// 构建简洁的历史记录列表项（仅用于"全部"标签页）
+  Widget _buildSimpleHistoryItem(
+    BuildContext context,
+    TranslationHistory history,
+    TranslationProvider provider,
+  ) {
+    final dateFormat = DateFormat('MM-dd HH:mm');
+    
+    return InkWell(
+      onTap: () => _showHistoryDetailDialog(context, history, provider),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: const Color(0xFFF3F4F6),
+              width: 1,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    history.sourceText,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF111827),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    history.translatedText,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF6B7280),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              dateFormat.format(history.timestamp),
+              style: const TextStyle(
+                fontSize: 11,
+                color: Color(0xFF9CA3AF),
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Icon(
+              Icons.chevron_right,
+              size: 18,
+              color: Color(0xFFD1D5DB),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 显示历史记录详情对话框
+  void _showHistoryDetailDialog(
+    BuildContext context,
+    TranslationHistory history,
+    TranslationProvider provider,
+  ) {
+    final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 标题栏
+              Row(
+                children: [
+                  const Icon(
+                    Icons.article_outlined,
+                    color: Color(0xFF3B82F6),
+                    size: 22,
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    '翻译详情',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF111827),
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 20),
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    color: const Color(0xFF9CA3AF),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // 源文本
+              const Text(
+                '原文',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF6B7280),
+                ),
+              ),
+              const SizedBox(height: 6),
+              SelectableText(
+                history.sourceText,
+                style: const TextStyle(
+                  fontSize: 15,
+                  height: 1.5,
+                  color: Color(0xFF111827),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Divider(height: 1),
+              const SizedBox(height: 16),
+              // 翻译结果
+              const Text(
+                '译文',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF6B7280),
+                ),
+              ),
+              const SizedBox(height: 6),
+              SelectableText(
+                history.translatedText,
+                style: const TextStyle(
+                  fontSize: 15,
+                  height: 1.5,
+                  color: Color(0xFF374151),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // 元信息
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEFF6FF),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      '${history.sourceLang} → ${history.targetLang}',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Color(0xFF3B82F6),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    dateFormat.format(history.timestamp),
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF9CA3AF),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              // 操作按钮
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // 生词本按钮
+                  TextButton.icon(
+                    icon: Icon(
+                      history.isVocabulary ? Icons.book : Icons.book_outlined,
+                      size: 18,
+                      color: history.isVocabulary
+                          ? const Color(0xFF3B82F6)
+                          : const Color(0xFF6B7280),
+                    ),
+                    label: Text(
+                      history.isVocabulary ? '已加入生词本' : '加入生词本',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: history.isVocabulary
+                            ? const Color(0xFF3B82F6)
+                            : const Color(0xFF6B7280),
+                      ),
+                    ),
+                    onPressed: () async {
+                      final error = await provider.toggleVocabulary(history);
+                      if (error != null && context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(error),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  // 收藏按钮
+                  TextButton.icon(
+                    icon: Icon(
+                      history.isFavorite ? Icons.star : Icons.star_border,
+                      size: 18,
+                      color: history.isFavorite
+                          ? Colors.amber
+                          : const Color(0xFF6B7280),
+                    ),
+                    label: Text(
+                      history.isFavorite ? '已收藏' : '收藏',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: history.isFavorite
+                            ? Colors.amber[700]
+                            : const Color(0xFF6B7280),
+                      ),
+                    ),
+                    onPressed: () => provider.toggleFavorite(history),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 构建历史记录卡片（用于收藏和生词本标签页）
   Widget _buildHistoryCard(
     BuildContext context,
     TranslationHistory history,
