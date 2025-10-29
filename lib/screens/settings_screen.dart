@@ -332,7 +332,6 @@ class _ConfigDialogState extends State<ConfigDialog> {
   late TextEditingController _modelController;
   late TextEditingController _apiKeyController;
   
-  bool _obscureApiKey = true;
   bool _isTesting = false;
 
   @override
@@ -392,25 +391,11 @@ class _ConfigDialogState extends State<ConfigDialog> {
             const SizedBox(height: 16),
             TextField(
               controller: _apiKeyController,
-              keyboardType: TextInputType.visiblePassword, // 使用可见密码键盘类型
-              enableSuggestions: false, // 禁用建议
-              autocorrect: false, // 禁用自动更正
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'API Key',
                 hintText: '输入API密钥',
-                prefixIcon: const Icon(Icons.key),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureApiKey ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureApiKey = !_obscureApiKey;
-                    });
-                  },
-                ),
+                prefixIcon: Icon(Icons.key),
               ),
-              obscureText: _obscureApiKey, // 保留遮罩功能但使用普通键盘
             ),
             const SizedBox(height: 16),
             // 测试连接按钮
