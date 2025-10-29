@@ -81,56 +81,69 @@ class _TranslationOutputState extends State<TranslationOutput> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        // 极浅蓝背景,呼应主题色但不抢眼
+        color: const Color(0xFFF0F9FF), // blue-50
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+          color: const Color(0xFF3B82F6).withOpacity(0.15), // Tailwind Blue 淡边框
+          width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: const Color(0xFF3B82F6).withOpacity(0.06),
             blurRadius: 10,
-            offset: const Offset(0, 2),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 工具栏
+          // 轻量化工具栏
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 8, 4, 4),
+            padding: const EdgeInsets.fromLTRB(16, 12, 8, 8),
             child: Row(
               children: [
-                Text(
+                const Icon(
+                  Icons.check_circle_outline,
+                  size: 18,
+                  color: Color(0xFF3B82F6), // Tailwind Blue
+                ),
+                const SizedBox(width: 8),
+                const Text(
                   '翻译结果',
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF374151), // 深灰色
                   ),
                 ),
                 const Spacer(),
-                // 复制按钮 - 始终占位以保持高度一致
+                // 复制按钮
                 IconButton(
-                  icon: const Icon(Icons.copy, size: 19),
+                  icon: const Icon(Icons.copy_outlined, size: 18),
                   onPressed: (widget.text.isNotEmpty && !widget.isLoading)
                       ? () => _copyToClipboard(context)
                       : null,
                   tooltip: '复制',
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: const Color(0xFF3B82F6), // Tailwind Blue
+                  disabledColor: const Color(0xFFD1D5DB), // 禁用时灰色
                   padding: const EdgeInsets.all(8),
                   constraints: const BoxConstraints(),
+                  splashRadius: 20,
                 ),
               ],
             ),
           ),
-          const Divider(height: 1),
+          const Divider(
+            height: 1,
+            color: Color(0xFFE0F2FE), // blue-100 分割线
+          ),
           // 翻译结果显示区域
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(16),
             child: SizedBox(
-              height: 8 * 21.0, // 增加到8行的高度
+              height: 8 * 21.0, // 8行的高度
               child: _buildContent(context),
             ),
           ),

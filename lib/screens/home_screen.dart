@@ -166,60 +166,69 @@ class HomeScreen extends StatelessWidget {
         translationProvider.sourceText.isNotEmpty &&
         !translationProvider.isTranslating;
 
-    return ElevatedButton(
-      onPressed: isEnabled
-          ? () {
-              final config = configProvider.currentConfig;
-              if (config != null) {
-                translationProvider.translate(config);
-              }
-            }
-          : null,
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        disabledBackgroundColor:
-            Theme.of(context).colorScheme.surfaceContainerHighest,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        elevation: 2,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: isEnabled
+            ? [
+                BoxShadow(
+                  color: const Color(0xFF3B82F6).withOpacity(0.25),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+            : null,
       ),
-      child: translationProvider.isTranslating
-          ? SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.translate,
-                  color: isEnabled
-                      ? Theme.of(context).colorScheme.onPrimary
-                      : Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
+      child: ElevatedButton(
+        onPressed: isEnabled
+            ? () {
+                final config = configProvider.currentConfig;
+                if (config != null) {
+                  translationProvider.translate(config);
+                }
+              }
+            : null,
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          backgroundColor: const Color(0xFF3B82F6), // Tailwind Blue
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: const Color(0xFFE5E7EB), // Gray-200
+          disabledForegroundColor: const Color(0xFF9CA3AF), // Gray-400
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 0,
+        ),
+        child: translationProvider.isTranslating
+            ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  color: Colors.white,
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  '翻译',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: isEnabled
-                        ? Theme.of(context).colorScheme.onPrimary
-                        : Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.38),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.translate_rounded,
+                    color: isEnabled ? Colors.white : const Color(0xFF9CA3AF),
+                    size: 20,
                   ),
-                ),
-              ],
-            ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '翻译',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                      color: isEnabled ? Colors.white : const Color(0xFF9CA3AF),
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
   }
 
