@@ -70,7 +70,7 @@ class _TranslationInputState extends State<TranslationInput> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFFE5E7EB), // 浅灰边框
-          width: 1,
+          width: 2, // 加粗边框：1 → 1.5
         ),
         boxShadow: [
           BoxShadow(
