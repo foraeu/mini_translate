@@ -65,64 +65,83 @@ class _TranslationInputState extends State<TranslationInput> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        // 使用纯白色背景
-        color: Colors.white,
+        // 微妙的渐变背景（白色→极浅蓝）
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white,
+            Theme.of(context).colorScheme.primary.withOpacity(0.02),
+          ],
+        ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.15),
+          width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 2),
-            spreadRadius: 1,
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+            spreadRadius: 0,
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 工具栏
+          // 轻量化工具栏（去掉背景色）
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 8, 4, 4),
+            padding: const EdgeInsets.fromLTRB(16, 12, 8, 8),
             child: Row(
               children: [
+                Icon(
+                  Icons.edit_outlined,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                ),
+                const SizedBox(width: 6),
                 Text(
                   '输入文本',
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
                 const Spacer(),
                 // 粘贴按钮
                 IconButton(
-                  icon: const Icon(Icons.content_paste, size: 19),
+                  icon: const Icon(Icons.content_paste_outlined, size: 18),
                   onPressed: _pasteFromClipboard,
                   tooltip: '粘贴',
                   color: Theme.of(context).colorScheme.secondary,
                   padding: const EdgeInsets.all(8),
                   constraints: const BoxConstraints(),
+                  splashRadius: 20,
                 ),
                 // 清除按钮
                 if (widget.text.isNotEmpty)
                   IconButton(
-                    icon: const Icon(Icons.clear, size: 19),
+                    icon: const Icon(Icons.clear_rounded, size: 18),
                     onPressed: widget.onClear,
                     tooltip: '清除',
-                    color: Theme.of(context).colorScheme.error,
+                    color: Theme.of(context).colorScheme.error.withOpacity(0.7),
                     padding: const EdgeInsets.all(8),
                     constraints: const BoxConstraints(),
+                    splashRadius: 20,
                   ),
               ],
             ),
           ),
-          const Divider(height: 1),
+          Divider(
+            height: 1,
+            color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+          ),
           // 文本输入框
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(16),
             child: TextField(
               controller: _controller,
               maxLines: 4,
@@ -130,21 +149,21 @@ class _TranslationInputState extends State<TranslationInput> {
                 hintText: '请输入要翻译的文本...',
                 border: InputBorder.none,
                 hintStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.35),
                 ),
               ),
-              style: const TextStyle(fontSize: 15, height: 1.4),
+              style: const TextStyle(fontSize: 15, height: 1.5),
               onChanged: widget.onTextChanged,
             ),
           ),
           // 字数统计
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
             child: Text(
               '字数: ${widget.wordCount}',
               style: TextStyle(
                 fontSize: 11,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
               ),
             ),
           ),
