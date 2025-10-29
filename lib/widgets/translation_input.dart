@@ -136,7 +136,7 @@ class _TranslationInputState extends State<TranslationInput> {
             padding: const EdgeInsets.all(16),
             child: TextField(
               controller: _controller,
-              maxLines: 4,
+              maxLines: 3,
               decoration: const InputDecoration(
                 hintText: '请输入要翻译的文本...',
                 border: InputBorder.none,
