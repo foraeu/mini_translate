@@ -73,19 +73,33 @@ class _TranslationInputState extends State<TranslationInput> {
           width: 2,
         ),
         boxShadow: [
+          // 主阴影 - 更深，营造深度
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
+          ),
+          // 边缘高光阴影 - 增强立体感
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 4,
+            offset: const Offset(0, 1),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 轻量化工具栏
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 8, 8),
+          // 轻量化工具栏 - 添加背景色区分
+          Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFFF9FAFB), // 极浅灰背景
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+            padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
             child: Row(
               children: [
                 const Icon(
@@ -129,7 +143,8 @@ class _TranslationInputState extends State<TranslationInput> {
           ),
           const Divider(
             height: 1,
-            color: Color(0xFFF3F4F6), // 极浅灰分割线
+            thickness: 1,
+            color: Color(0xFFE5E7EB), // 分割线稍微加深
           ),
           // 文本输入框
           Padding(
