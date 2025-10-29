@@ -42,12 +42,20 @@ jobs:
     - name: Build APK (Split per ABI)
       run: flutter build apk --release --split-per-abi
       
-    - name: Get version from pubspec
+    - name: Get version
       id: version
       run: |
-        VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "Building version: $VERSION"
+        # 如果是 tag 触发，使用 tag 名称（去掉 v 前缀）
+        if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Building from tag: v$VERSION"
+        else
+          # 否则从 pubspec.yaml 读取版本
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Building from pubspec.yaml: $VERSION"
+        fi
         
     - name: Rename APK files
       run: |
