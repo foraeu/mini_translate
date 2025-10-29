@@ -392,8 +392,9 @@ class _ConfigDialogState extends State<ConfigDialog> {
             const SizedBox(height: 16),
             TextField(
               controller: _apiKeyController,
-              obscureText: _obscureApiKey,
-              enableIMEPersonalizedLearning: false, // 禁用安全键盘
+              keyboardType: TextInputType.visiblePassword, // 使用可见密码键盘类型
+              enableSuggestions: false, // 禁用建议
+              autocorrect: false, // 禁用自动更正
               decoration: InputDecoration(
                 labelText: 'API Key',
                 hintText: '输入API密钥',
@@ -409,6 +410,7 @@ class _ConfigDialogState extends State<ConfigDialog> {
                   },
                 ),
               ),
+              obscureText: _obscureApiKey, // 保留遮罩功能但使用普通键盘
             ),
             const SizedBox(height: 16),
             // 测试连接按钮
