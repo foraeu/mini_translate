@@ -81,16 +81,16 @@ class _TranslationOutputState extends State<TranslationOutput> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        // 极浅蓝背景,呼应主题色但不抢眼
-        color: const Color(0xFFF0F9FF), // blue-50
+        // 更浅的背景色,几乎是白色但带一点点蓝调
+        color: const Color(0xFFFAFBFC), // 极浅的灰蓝色
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: const Color(0xFF3B82F6).withOpacity(0.15), // Tailwind Blue 淡边框
+          color: const Color(0xFF3B82F6).withOpacity(0.12), // 更淡的蓝色边框
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF3B82F6).withOpacity(0.06),
+            color: const Color(0xFF3B82F6).withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -137,7 +137,7 @@ class _TranslationOutputState extends State<TranslationOutput> {
           ),
           const Divider(
             height: 1,
-            color: Color(0xFFE0F2FE), // blue-100 分割线
+            color: Color(0xFFE5E7EB), // 与输入区一致的浅灰分割线
           ),
           // 翻译结果显示区域
           Padding(
