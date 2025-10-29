@@ -696,88 +696,89 @@ class _HistoryScreenState extends State<HistoryScreen>
     
     showDialog(
       context: context,
-      builder: (BuildContext dialogContext) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 400),
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 标题栏
-              Row(
-                children: [
-                  const Icon(
-                    Icons.article_outlined,
-                    color: Color(0xFF3B82F6),
-                    size: 22,
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    '翻译详情',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF111827),
+      builder: (BuildContext dialogContext) => StatefulBuilder(
+        builder: (context, setState) => Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 标题栏
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.article_outlined,
+                      color: Color(0xFF3B82F6),
+                      size: 22,
                     ),
+                    const SizedBox(width: 8),
+                    const Text(
+                      '翻译详情',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF111827),
+                      ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.close, size: 20),
+                      onPressed: () => Navigator.of(dialogContext).pop(),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      color: const Color(0xFF9CA3AF),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                // 源文本
+                const Text(
+                  '原文',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF6B7280),
                   ),
-                  const Spacer(),
-                  IconButton(
-                    icon: const Icon(Icons.close, size: 20),
-                    onPressed: () => Navigator.of(dialogContext).pop(),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    color: const Color(0xFF9CA3AF),
+                ),
+                const SizedBox(height: 6),
+                SelectableText(
+                  history.sourceText,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    height: 1.5,
+                    color: Color(0xFF111827),
                   ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              // 源文本
-              const Text(
-                '原文',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF6B7280),
                 ),
-              ),
-              const SizedBox(height: 6),
-              SelectableText(
-                history.sourceText,
-                style: const TextStyle(
-                  fontSize: 15,
-                  height: 1.5,
-                  color: Color(0xFF111827),
+                const SizedBox(height: 16),
+                const Divider(height: 1),
+                const SizedBox(height: 16),
+                // 翻译结果
+                const Text(
+                  '译文',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF6B7280),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              const Divider(height: 1),
-              const SizedBox(height: 16),
-              // 翻译结果
-              const Text(
-                '译文',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF6B7280),
+                const SizedBox(height: 6),
+                SelectableText(
+                  history.translatedText,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    height: 1.5,
+                    color: Color(0xFF374151),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 6),
-              SelectableText(
-                history.translatedText,
-                style: const TextStyle(
-                  fontSize: 15,
-                  height: 1.5,
-                  color: Color(0xFF374151),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // 元信息
-              Row(
-                children: [
+                const SizedBox(height: 16),
+                // 元信息
+                Row(
+                  children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
@@ -839,6 +840,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                           ),
                         );
                       }
+                      // 更新对话框状态
+                      setState(() {});
                     },
                   ),
                   const SizedBox(width: 8),
@@ -860,13 +863,17 @@ class _HistoryScreenState extends State<HistoryScreen>
                             : const Color(0xFF6B7280),
                       ),
                     ),
-                    onPressed: () => provider.toggleFavorite(history),
+                    onPressed: () => provider.toggleFavorite(history).then((_) {
+                      // 更新对话框状态
+                      setState(() {});
+                    }),
                   ),
                 ],
               ),
             ],
           ),
         ),
+      ),
       ),
     );
   }
