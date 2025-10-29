@@ -393,6 +393,7 @@ class _ConfigDialogState extends State<ConfigDialog> {
             TextField(
               controller: _apiKeyController,
               obscureText: _obscureApiKey,
+              enableIMEPersonalizedLearning: false, // 禁用安全键盘
               decoration: InputDecoration(
                 labelText: 'API Key',
                 hintText: '输入API密钥',
