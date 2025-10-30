@@ -73,8 +73,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                   return TabBarView(
                     controller: _tabController,
                     children: [
-                      // 全部历史 - 使用简洁列表
-                      _buildSimpleHistoryList(context, provider.histories, provider),
+                      // 全部历史 - 使用简洁列表（只显示普通记录）
+                      _buildSimpleHistoryList(context, provider.normalHistories, provider),
                       // 收藏列表 - 使用卡片样式
                       _buildCardHistoryList(context, provider.favorites, provider),
                       // 生词本（按掌握程度分组）
@@ -282,7 +282,7 @@ class _HistoryScreenState extends State<HistoryScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('清空历史记录'),
-        content: const Text('确定要清空"全部"栏目下的普通记录吗？\n\n收藏和生词本不会被清空。'),
+        content: const Text('确定要清空"全部"栏目下的所有记录吗？\n\n"收藏"和"生词本"栏目的记录不会被清空。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

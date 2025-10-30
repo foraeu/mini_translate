@@ -33,6 +33,9 @@ class TranslationProvider with ChangeNotifier {
   bool get isTranslating => _isTranslating;
   String? get errorMessage => _errorMessage;
   List<TranslationHistory> get histories => _histories;
+  /// 获取普通历史记录（不包括收藏和生词本）
+  List<TranslationHistory> get normalHistories => 
+      _histories.where((h) => !h.isFavorite && !h.isVocabulary).toList();
   List<TranslationHistory> get favorites => _favorites;
   List<TranslationHistory> get vocabularies => _vocabularies;
   int get wordCount => _sourceText.length;
